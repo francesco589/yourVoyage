@@ -1,11 +1,11 @@
 'use client'
+import { useContext } from 'react'
 import Card from './components/Card'
-import useFetchApi from './hooks/useFetchApi'
-import Image from 'next/image'
+import ctx from './data/ctx'
 
 export default function Home() {
 
-  const [voyages, setVoyages, stages, setStages, cities, setCities] = useFetchApi()
+  const { voyages, setVoyages, stages, setStages, cities, setCities } = useContext(ctx)
 
 
   return (

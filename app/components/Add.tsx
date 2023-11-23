@@ -1,15 +1,15 @@
 'use client'
 
-import React, { useReducer, useRef, useState } from 'react'
-import useFetchApi from '../hooks/useFetchApi'
+import React, { useContext, useReducer, useRef, useState } from 'react'
 import axios from 'axios'
 import { AnimatePresence, motion } from 'framer-motion'
+import ctx from '../data/ctx'
 
 
 
 function Add(props) {
 
-    const [voyages, setVoyages, stages, setStages, cities, setCities] = useFetchApi()
+    const { voyages, setVoyages, stages, setStages, cities, setCities } = useContext(ctx)
 
     const [input, setInput] = useReducer((state, action) => {
         switch (action.type) {
@@ -49,7 +49,7 @@ function Add(props) {
 
     const [animation, setAnimation] = useState(false)
 
-    const refFile = useRef()
+    const refFile = useRef(null)
 
     const [checkedStages, setCheckedStages] = useState([]);
 
@@ -70,9 +70,9 @@ function Add(props) {
             form.append('description', input.description)
             form.append('cityId', input.cityId)
             const resp = await axios.post('/api/stages', form)
-            setStages(prev => [...prev, resp.data.data])
+            setStages(prev => [...prev, resp.data.data]),
             setInput({ type: 'reset' })
-            console.log(resp);
+
         }
         else {
             console.log('not ok');
@@ -86,11 +86,15 @@ function Add(props) {
             form.append('img', input.img)
             form.append('stageIds', input.stageIds)
             const resp = await axios.post('/api/voyages', form)
-            setVoyages(prev => [...prev, resp.data.data])
-            setInput({ type: 'reset' })
-            setCheckedStages([])
-            console.log(resp.data.data);
+                setVoyages(prev => [...prev, resp.data.data])
+                setInput({ type: 'reset' })
+                setCheckedStages([])
             
+            
+           
+
+            console.log(resp.data.data);
+
 
 
         }
@@ -161,6 +165,7 @@ function Add(props) {
                     />
                     <span>Cover Image</span>
                     <input
+                        ref={refFile}
                         className='border border-slate-500 rounded-xl p-1 bg-amber-100'
                         onChange={(e) => setInput({ type: 'image', e })}
                         type="file"

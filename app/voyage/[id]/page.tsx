@@ -1,12 +1,12 @@
 'use client'
-import useFetchApi from '@/app/hooks/useFetchApi'
-import React from 'react'
+import React, { useContext } from 'react'
 import Image from 'next/image'
 import { AnimatePresence, motion } from 'framer-motion'
+import ctx from '@/app/data/ctx'
 
 function Voyage({ params }) {
 
-  const [voyages, setVoyages, stages, setStages, cities, setCities] = useFetchApi()
+  const { voyages, setVoyages, stages, setStages, cities, setCities } = useContext(ctx)
 
   const filtered = voyages.filter(el => (el._id === params.id))
 

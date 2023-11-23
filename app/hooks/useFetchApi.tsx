@@ -1,5 +1,6 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
+import { voyageType } from "../types.ts/types";
 
 
 function useFetchApi(){
@@ -19,7 +20,7 @@ useEffect(()=>{
 
     fetchFn()
 
-},[voyages, stages])
+},[])
 
 return [voyages, setVoyages, stages, setStages, cities, setCities]
 

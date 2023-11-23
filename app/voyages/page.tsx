@@ -1,12 +1,12 @@
 'use client'
-import React from 'react'
-import useFetchApi from '../hooks/useFetchApi'
+import React, { useContext } from 'react'
 import Card from '../components/Card'
+import ctx from '../data/ctx'
 
 
 function Voyages() {
 
-  const [voyages, setVoyages, stages, setStages, cities, setCities] = useFetchApi()
+  const { voyages, setVoyages, stages, setStages, cities, setCities } = useContext(ctx)
 
   return (
     <main className='bg-amber-50 p-3'>

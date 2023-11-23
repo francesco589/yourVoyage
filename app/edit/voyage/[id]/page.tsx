@@ -1,29 +1,32 @@
 'use client'
 
-import React, { useReducer, useRef, useState } from 'react'
+import React, { useContext, useState } from 'react'
 import useFetchApi from '../../../hooks/useFetchApi'
 import axios from 'axios'
-import { AnimatePresence, motion } from 'framer-motion'
+import ctx from '@/app/data/ctx'
 
 
 
-function EditVoyage({params}) {
 
-    const [voyages, setVoyages, stages, setStages, cities, setCities] = useFetchApi()
 
-    const {id} = params
+function EditVoyage({ params }) {
 
-    const [input, setinput] = useReducer((state, action)=>{
+    const { voyages, setVoyages, stages, setStages, cities, setCities } = useContext(ctx)
+    //const [voyages, setVoyages, stages, setStages, cities, setCities] = useFetchApi()
 
-    },{
-      voyageName:'',
-      img:'',
-      stageIds: []
+    const { id } = params
+
+
+
+    const [input, setinput] = useState({
+        voyageName: 'current.voyageName',
+        img: 'current.img',
+        stageIds: []
     })
 
     const [checkedStages, setCheckedStages] = useState([]);
 
-    const checkReset = (ev) => {
+    const checkBox = (ev) => {
         const { value, checked } = ev.target;
         if (checked) {
             setCheckedStages((prev) => [...prev, value]);
@@ -45,7 +48,7 @@ function EditVoyage({params}) {
             setInput({ type: 'reset' })
             setCheckedStages([])
             console.log(resp.data.data);
-            
+
 
 
         }
@@ -67,19 +70,14 @@ function EditVoyage({params}) {
     return (
         <>
 
-            
+
 
             <section>
                 <div>
-            
+
                     <h1 className={'bg-amber-200 p-4 rounded-md'} >Modifica il tuo itinerario</h1>
                 </div>
-                <div
-                    className='flex flex-col gap-2 bg-amber-200 p-2'
-                    initial={{ opacity: 1 }}
-                    transition={{ duration: 1 }}
-                    animate={animation ? { y: 0, opacity: 1 } : { y: -1000, opacity: 0 }}
-                >
+                <div className='flex flex-col gap-2 bg-amber-200 p-2'>
 
                     <label htmlFor="voyageName">Nome: </label>
                     <input
@@ -102,7 +100,7 @@ function EditVoyage({params}) {
                                 <label>
                                     <input
                                         checked={checkedStages.includes(el._id)}
-                                        onChange={(e) => setInput({ type: 'arr', e }, checkReset(e))}
+                                        onChange={(e) => setInput({ type: 'arr', e }, checkBox(e))}
                                         type='checkbox'
                                         key={el._id}
                                         value={el._id}
@@ -114,7 +112,7 @@ function EditVoyage({params}) {
                                 </button></div>
                         ))}
                     </div>
-                    <button onClick={addVoyageHandler}>Aggiungi Itinerario</button>
+                    <button onClick={editVoyageHandler}>Aggiungi Itinerario</button>
                 </div>
             </section>
         </>
