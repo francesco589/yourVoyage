@@ -1,5 +1,5 @@
 'use client'
-import { useContext } from 'react'
+import React, { useContext } from 'react'
 import Card from './components/Card'
 import ctx from './data/ctx'
 

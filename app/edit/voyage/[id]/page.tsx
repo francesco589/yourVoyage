@@ -1,28 +1,36 @@
 'use client'
 
-import React, { useContext, useState } from 'react'
-import useFetchApi from '../../../hooks/useFetchApi'
+import React, { useContext, useEffect, useState } from 'react'
 import axios from 'axios'
 import ctx from '@/app/data/ctx'
-
-
-
 
 
 function EditVoyage({ params }) {
 
     const { voyages, setVoyages, stages, setStages, cities, setCities } = useContext(ctx)
-    //const [voyages, setVoyages, stages, setStages, cities, setCities] = useFetchApi()
-
     const { id } = params
 
-
-
-    const [input, setinput] = useState({
-        voyageName: 'current.voyageName',
-        img: 'current.img',
+    const reset = {
+        voyageName: '',
+        img: '',
         stageIds: []
-    })
+    }
+
+
+    const [input, setInput] = useState(reset)
+
+    useEffect(() => {
+        const currentVoyage = voyages.find(voyage => voyage._id === id)
+        if (currentVoyage) {
+            setInput({
+                voyageName: currentVoyage.voyageName || '',
+                img: currentVoyage.img || '',
+                stageIds: currentVoyage.stageIds || []
+            })
+        }
+    }, [id, voyages])
+
+
 
     const [checkedStages, setCheckedStages] = useState([]);
 
@@ -38,18 +46,24 @@ function EditVoyage({ params }) {
 
 
     const editVoyageHandler = async () => {
-        if (input.voyageName !== '' && input.img && input.stageIds.length !== 0) {
+        if (input.voyageName !== '') {
             const form = new FormData()
             form.append('voyageName', input.voyageName)
-            form.append('img', input.img)
-            form.append('stageIds', input.stageIds)
-            const resp = await axios.post('/api/voyages', form)
-            setVoyages(prev => [...prev, resp.data.data])
+            if (input.img) {
+                form.append('img', input.img)
+            }
+            if (input.stageIds != undefined) {
+                form.append('stageIds', input.stageIds)
+            }
+            const resp = await axios.patch('/api/voyages/'+ id, form)
+
+            setVoyages(prev => prev.filter(el => el._id !== id))
             setInput({ type: 'reset' })
             setCheckedStages([])
-            console.log(resp.data.data);
 
-
+            setTimeout(() => {
+                location.replace('/dashboard')
+            }, 1000);
 
         }
         else {
@@ -112,7 +126,7 @@ function EditVoyage({ params }) {
                                 </button></div>
                         ))}
                     </div>
-                    <button onClick={editVoyageHandler}>Aggiungi Itinerario</button>
+                    <button onClick={editVoyageHandler}>Modifica Itinerario</button>
                 </div>
             </section>
         </>
